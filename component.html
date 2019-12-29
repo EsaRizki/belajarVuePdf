@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Hari 1</title>
+	<style type="text/css">
+		.title{
+			color: Blue;
+		}
+	</style>
+	<style>
+		.fade-enter-active, .fade-leave-active {
+transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+opacity: 0;
+}
+form {
+border: 1px solid #ddd;
+padding:5px;
+width:225px;
+background: #efefef;
+}
+label{
+display: block;
+margin-top: 5px;
+}
+input, textarea, select, option {
+min-width: 200px;
+}
+.card {
+background: #efefef;
+border:1px solid #ddd;
+margin-right:5px;
+padding:5px;
+width: 200px;
+float:left;
+}
+h3{
+min-height: 45px;
+}
+</style>
+
+</head>
+<body>
+	<div id="app">
+		<button @click="currentComponent = 'list'">List</button>
+<button @click="currentComponent = 'detail'">Detail</button>
+<hr>
+<transition name="fade" mode="out-in">
+<component :is="currentComponent"></component>
+</transition>
+		<!-- <p v-if="errors.length">
+		<b>Please correct the following error(s):</b>
+		<ul>
+		<li v-for="error in errors">{{ error }}</li>
+		</ul>
+		</p>
+
+			<form ref="formBook" @submit.prevent="submitForm($event)" action="http://example.com/addproduct" method="post">
+			<label>Title:</label>
+			<input type="text" ref="title" name="title" v-model="title" />
+			<label>Description:</label>
+			<textarea v-model="description" name="description" ref="description"></textarea>
+			<label>Authors:</label>
+			<input type="text" v-model="authors" name="authors" ref="authors">
+
+			<label>Price:</label>
+			<input type="number" v-model.number="price" ref="price" name="price">
+			<label>Categories:</label>
+			<select v-model="categories" multiple name="categories" ref="categories">
+			<option v-for="option in options" :value="option.value">
+			{{ option.text }}
+			</option>
+			</select>
+			<label></label>
+			<label>Cover:</label>
+			<input name="cover" ref="cover" type="file"> 
+			<p></p>
+			<input type="submit" value="Submit">
+</form> -->
+	</div>
+
+
+
+
+<script src="./vue.js"></script>
+<script src="./vue-router.js"></script>
+
+<!-- <script>
+	var BookComponent = {
+	data () {
+	return {
+	classCard: 'card'
+	}
+	},
+	props: [ 'title', 'description', 'image' ],
+	template : `
+	<div :class="classCard">
+	<h3>{{ title }}</h3>
+	<img :src="image" style="width:100%">
+	<p v-html="description"></p>
+	</div>
+	`
+	}
+	var ComponentA = {
+	template: `<p>Component A</p>`
+	}
+	var ComponentB = {
+	template: `<p>Component B</p>`
+	}
+	var ComponentC = {
+	template: `<p>Component C</p>`
+	}
+	// Vue.component('component-a', {
+	// template: `<p>Component A</p>`
+	// })
+	// Vue.component('component-b', {
+	// template: `<p>Component B</p>`
+	// })
+	// Vue.component('component-c', {
+	// template: `<p>Component C</p>`
+	// })
+	new Vue({ el: '#app1' })
+	new Vue({ el: '#app2' })
+	Vue.component('hello-world', {
+	data () {
+	return {
+	message: 'Hello world!'
+	}
+	},
+	template: '<h1> {{ message }}</h1>'
+	})
+	Vue.filter('upper', function (value) {
+	return value.toUpperCase()
+	})
+	var vm = new Vue({
+		el: '#app',
+		data: {
+			judul: 'judul buku',
+			title: 'Google Glass with VueJS',
+			description: 'Control Google Glass with VueJS',
+			authors: 'Hafid Mukhlasin',
+			price: 75000,
+			categories: [],
+			options: [
+			{ text: 'Graphics Programming', value: '01' },
+			{ text: 'Mobile Application Development', value: '02' },
+			{ text: 'Virtual and Augmented Reality', value: '03' }
+			],
+			errors: []
+
+		},
+		components: {
+		'component-a': ComponentA,
+		'component-b': ComponentB,
+		'component-c': ComponentC,
+		'book': BookComponent,
+		},
+
+		computed: {
+		filterBooks() {
+		return this.books.filter((book)=>{
+		return book.includes(this.keyword)
+		})
+		}
+	},
+
+		methods: {
+				info (text) {
+				alert(text)
+			},
+			link(event){
+				alert('Ayo')
+			},
+			onClick(){
+				alert('Coba')	
+			},
+
+			onCtrlClick(){
+				alert('Ctrl Coba')	
+			},
+			submitForm(event){
+				this.errors = []
+				if(this.title.length < 3){
+				this.errors.push('Title minimal 3 karakter!')
+				this.$refs.title.select()
+				}
+				if(this.description.length > 500){
+				this.errors.push('Description maximal 500 karakter!')
+				this.$refs.description.select()
+				}
+				if(this.authors.length < 3){
+				this.errors.push('Authors minimal 3 karakter!')
+				this.$refs.authors.select()
+				}
+				if(this.price < 0){
+				this.errors.push('Price tidak boleh minus!')
+				this.$refs.price.select()
+				}
+				if(this.categories.length === 0){
+				this.errors.push('Pilih minimal 1 category!')
+				this.$refs.categories.focus()
+				}
+				if( this.errors.length === 0 ){
+				// alert('Terima kasih telah mengisi data dengan benar!')
+				// persiapkan data
+				// get file yang dibrowse user
+				let cover = this.$refs.cover.files[0]
+				let formData = new FormData()
+				formData.append('title', this.title)
+				formData.append('description', this.description)
+				formData.append('authors', this.authors)
+				formData.append('price', this.price)
+				formData.append('categories', this.categories)
+				formData.append("cover", cover);
+				// kirim data ke server
+				let xhttp = new XMLHttpRequest() // create objek XMLHttp
+				// definisikan fungsi ketika terjadi perubahan state
+				xhttp.onreadystatechange = function() {
+				// state ini menunjukkan data terkirim dan diterima server dengan baik
+				if (this.readyState == 4 && this.status == 200) {
+				// respon text dari server
+				console.log(this.responseText)
+				}
+				}
+				// sesuaikan dengan lokasi file index.php di lokasi komputer kamu
+				xhttp.open("POST", "http://localhost:8000/index.php", true)
+				// bisa juga langsung nama filenya jika berada dalam satu folder yang sama
+				// xhttp.open("POST", "index.php", true)
+				// kirim objek formData
+				xhttp.send(formData)
+				}
+			},
+		},
+		filters: {
+			upper (text) {
+				return text.toUpperCase()
+			},
+			reverse (text) {
+				return text.split('').reverse().join('')
+			},
+		},
+		});
+</script> -->
+<script type="module">
+import { BookComponent } from './BookComponent.js'
+var MixinHello = {
+created: function () {
+this.hello()
+},
+methods: {
+hello: function () {
+console.log('hello from mixin!')
+}
+}
+}
+
+var list = {
+template: `
+<div class="card">
+<strong>Bahasa Pemrograman</strong>
+<ul>
+<li>Javascript</li>
+<li>PHP</li>
+<li>Java</li>
+</ul>
+</div>
+`
+}
+var detail = {
+template: `
+<div class="card">
+<strong>PHP</strong>
+<p>
+PHP adalah singkatan dari PHP Hypertext Preprocessor.
+</p>
+</div>
+`
+}
+var vm = new Vue({
+el: '#app',
+components: {
+'book': BookComponent,
+'list': list,
+'detail': detail,
+},
+mixins: [
+MixinHello
+],
+data: {
+	currentComponent: 'list',
+selectedBook: '',
+books : [
+/* ... */{
+		id: 99,
+		title: 'C++ High Performance',
+		description: 'Write code that scales across CPU registers, multi-core, and machine clusters',
+		authors: 'Viktor Sehr, Björn Andrist',
+		publish_year: 2018,
+		price: 100000,
+		image: 'kontrol.png'
+		},
+		{
+		id: 100,
+		title: 'Mastering Linux Security and Hardening',
+		description: 'A comprehensive guide to mastering the art \
+		of preventing your Linux system from getting compromised',
+		authors: 'Donald A. Tevault',
+		publish_year: 2018,
+		price: 125000,
+		image: 'picture4.jpg'
+		},
+		{
+		id: 101,
+		title: 'Mastering PostgreSQL 10',
+		description: 'Master the capabilities of PostgreSQL 10 to\
+		efficiently manage and maintain your database',
+		authors: 'Hans-Jürgen Schönig',
+		publish_year: 2016,
+		price: 90000,
+		image: 'proto.jpg'
+		},
+		{
+		id: 102,
+		title: 'Python Programming Blueprints',
+		description: 'How to build useful, real-world\
+		applications in the Python programming language',
+		authors: 'Daniel Furtado, Marcus Pennington',
+		publish_year: 2017,
+		price: 75000,
+		image: 'raharja.png'
+		},
+		],
+}
+})
+</script>
+<script>
+	Vue.component('alert', {
+data () {
+return {
+defaultAlert: 'Awas Bahaya',
+}
+},
+template: `
+<div>
+<slot>{{ defaultAlert }}</slot>
+</div>
+`
+})
+Vue.component('information', {
+template: `
+<div class="card">
+<slot name="judul"></slot>
+<hr>
+<slot name="isi"></slot>
+</div>
+`
+})
+	var InputComponent = {
+	data () {
+	return {
+	classCard: 'card'
+	}
+	},
+	props: [ 'value' ],
+	template : `
+	<input
+	:value="value"
+	@input="$emit('input', $event.target.value)"
+	>
+	`
+	}
+	// var InputComponent = {
+
+	// props: ['value'],
+	// template: `
+	// <input
+	// :value="value"
+	// @input="$emit('input', $event.target.value)"
+	// >
+	// `
+	// },
+	
+// 	var BookComponent = {
+// 	data () {
+// 	return {
+// 	classCard: 'card'
+// 	}
+// 	},
+// 	props: [ 'book' ],
+// 	template : `
+// 	<div :class="classCard">
+// 	<h3>{{ book.title }}</h3>
+// 	<img :src="book.image" style="width:100%">
+// 	<p v-html="book.description"></p>
+// 	<button @click="$emit('selected', book.title)"> Select
+// </button>
+// 	</div>
+// 	`
+// 	}
+// 	// deklarasi object vue dengan data books
+// var vm = new Vue({
+// el: '#app',
+// components: {
+// 'book': BookComponent,
+// 'custom-input' : InputComponent,
+// },
+// data: {
+// 	searchText: '',
+// 		books : [
+// 		{
+// 		id: 99,
+// 		title: 'C++ High Performance',
+// 		description: 'Write code that scales across CPU registers, multi-core, and machine clusters',
+// 		authors: 'Viktor Sehr, Björn Andrist',
+// 		publish_year: 2018,
+// 		price: 100000,
+// 		image: 'kontrol.png'
+// 		},
+// 		{
+// 		id: 100,
+// 		title: 'Mastering Linux Security and Hardening',
+// 		description: 'A comprehensive guide to mastering the art \
+// 		of preventing your Linux system from getting compromised',
+// 		authors: 'Donald A. Tevault',
+// 		publish_year: 2018,
+// 		price: 125000,
+// 		image: 'picture4.jpg'
+// 		},
+// 		{
+// 		id: 101,
+// 		title: 'Mastering PostgreSQL 10',
+// 		description: 'Master the capabilities of PostgreSQL 10 to\
+// 		efficiently manage and maintain your database',
+// 		authors: 'Hans-Jürgen Schönig',
+// 		publish_year: 2016,
+// 		price: 90000,
+// 		image: 'proto.jpg'
+// 		},
+// 		{
+// 		id: 102,
+// 		title: 'Python Programming Blueprints',
+// 		description: 'How to build useful, real-world\
+// 		applications in the Python programming language',
+// 		authors: 'Daniel Furtado, Marcus Pennington',
+// 		publish_year: 2017,
+// 		price: 75000,
+// 		image: 'raharja.png'
+// 		},
+// 		],
+// 		selectedBook: '',
+// }
+// });
+</script>
+</body>
+</html>
